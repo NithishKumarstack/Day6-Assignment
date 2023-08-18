@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Rest Countries Data</title>
+</head>
+<body>
+  <h1>Countries Data</h1>
+
+  <div id="output"></div>
+
+  <script>
+    // Fetch data and perform operations
+    fetch('https://restcountries.com/v3.1/all')
+      .then(response => response.json())
+      .then(data => {
+        const outputDiv = document.getElementById('output');
+
+        // Problem 1: Get all the countries from Asia continent/region
+        const countriesInAsia = data.filter(country => country.region === 'Asia');
+        outputDiv.innerHTML += "<h2>Countries in Asia:</h2>";
+        countriesInAsia.forEach(country => {
+          outputDiv.innerHTML += `<p>${country.name.common}</p>`;
+        });
+
+        // Problem 2: Get all the countries with a population of less than 2 lakhs
+        const countriesWithSmallPopulation = data.filter(country => country.population < 200000);
+        outputDiv.innerHTML += "<h2>Countries with population less than 2 lakhs:</h2>";
+        countriesWithSmallPopulation.forEach(country => {
+          outputDiv.innerHTML += `<p>${country.name.common}</p>`;
+        });
+
+        // Problem 3: Print name, capital, and flag
+        outputDiv.innerHTML += "<h2>Country Details:</h2>";
+        data.forEach(country => {
+          outputDiv.innerHTML += `<p>Name: ${country.name.common}, Capital: ${country.capital}, Flag: <img src="${country.flags.svg}" alt="${country.name.common} Flag"></p>`;
+        });
+
+        // Problem 4: Print the total population of countries
+        const totalPopulation = data.reduce((acc, country) => acc + country.population, 0);
+        outputDiv.innerHTML += `<h2>Total population of countries:</h2><p>${totalPopulation}</p>`;
+
+        // Problem 5: Print the country which uses US Dollars as currency
+        const countryWithUSDollarCurrency = data.find(country => country.currencies && country.currencies.USD);
+        outputDiv.innerHTML += "<h2>Country with USD currency:</h2>";
+        outputDiv.innerHTML += `<p>${countryWithUSDollarCurrency.name.common}</p>`;
+      })
+      .catch(error => {
+        const outputDiv = document.getElementById('output');
+        outputDiv.innerHTML = `<p>Error fetching data: ${error}</p>`;
+      });
+  </script>
+</body>
+</html>
